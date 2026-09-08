@@ -3,3 +3,6 @@ target/
 *.log
 .idea/
 .vscode/
+
+*.pid
+.job_logs/
