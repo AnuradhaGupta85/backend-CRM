@@ -1,0 +1,12 @@
+INSERT INTO users (name, email, password) VALUES ('Seed One', 'seed1@example.com', 'a0EqJtq98hPqEX7fNZaFWoOaJQmPSuAOBGjqB0tECsYE9yKkGmCsly'), ('Seed Two', 'seed2@example.com', 'a0EqJtq98hPqEX7fNZaFWoOaJQmPSuAOBGjqB0tECsYE9yKkGmCsly'), ('Seed Three', 'seed3@example.com', 'a0EqJtq98hPqEX7fNZaFWoOaJQmPSuAOBGjqB0tECsYE9yKkGmCsly') ON CONFLICT DO NOTHING;
+INSERT INTO employee (full_name) VALUES ('Seed 1'), ('Seed 2'), ('Seed 3') ON CONFLICT DO NOTHING;
+INSERT INTO tasks (title, status) VALUES ('Seed 1', 'PENDING'), ('Seed 2', 'PENDING'), ('Seed 3', 'PENDING') ON CONFLICT DO NOTHING;
+INSERT INTO leads (name, status) VALUES ('Seed 1', 'PENDING'), ('Seed 2', 'PENDING'), ('Seed 3', 'PENDING') ON CONFLICT DO NOTHING;
+INSERT INTO departments (name, status) VALUES ('Seed 1', 'PENDING'), ('Seed 2', 'PENDING'), ('Seed 3', 'PENDING') ON CONFLICT DO NOTHING;
+INSERT INTO attendances (date, status) VALUES (DATE '2026-01-01', 'PENDING'), (DATE '2026-01-02', 'PENDING'), (DATE '2026-01-03', 'PENDING') ON CONFLICT DO NOTHING;
+INSERT INTO leaves (reason, status) VALUES ('Seed 1', 'PENDING'), ('Seed 2', 'PENDING'), ('Seed 3', 'PENDING') ON CONFLICT DO NOTHING;
+INSERT INTO announcements (title, status) VALUES ('Seed 1', 'PENDING'), ('Seed 2', 'PENDING'), ('Seed 3', 'PENDING') ON CONFLICT DO NOTHING;
+INSERT INTO notifications (message, status) VALUES ('Seed 1', 'PENDING'), ('Seed 2', 'PENDING'), ('Seed 3', 'PENDING') ON CONFLICT DO NOTHING;
+INSERT INTO meetings (title, status) VALUES ('Seed 1', 'PENDING'), ('Seed 2', 'PENDING'), ('Seed 3', 'PENDING') ON CONFLICT DO NOTHING;
+INSERT INTO customer_notes (note, status) VALUES ('Seed 1', 'PENDING'), ('Seed 2', 'PENDING'), ('Seed 3', 'PENDING') ON CONFLICT DO NOTHING;
+INSERT INTO reports (title, status) VALUES ('Seed 1', 'PENDING'), ('Seed 2', 'PENDING'), ('Seed 3', 'PENDING') ON CONFLICT DO NOTHING;
