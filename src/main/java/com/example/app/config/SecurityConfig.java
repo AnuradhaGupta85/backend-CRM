@@ -14,13 +14,35 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class SecurityConfig {
-    private final JwtFilter jwtFilter;
-    public SecurityConfig(JwtFilter jwtFilter) { this.jwtFilter = jwtFilter; }
-    @Bean
-    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults()).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(auth -> auth.requestMatchers("/api/v1/auth/**", "/actuator/health", "/docs/**", "/api-docs/**", "/swagger-ui/**").permitAll().anyRequest().authenticated()).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+  private final JwtFilter jwtFilter;
+
+  public SecurityConfig(JwtFilter jwtFilter) {
+    this.jwtFilter = jwtFilter;
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .cors(Customizer.withDefaults())
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(
+                        "/api/v1/auth/**",
+                        "/actuator/health",
+                        "/docs/**",
+                        "/api-docs/**",
+                        "/swagger-ui/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+  }
 }

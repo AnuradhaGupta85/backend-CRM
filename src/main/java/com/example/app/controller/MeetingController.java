@@ -22,21 +22,51 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/meetings")
 @Tag(name = "Meeting")
 public class MeetingController {
-    private final MeetingRepository repository;
-    public MeetingController(MeetingRepository repository) { this.repository = repository; }
-    @PostMapping
-    @Operation(summary = "Create meeting")
-    public ResponseEntity<Meeting> create(@Valid @RequestBody Meeting value) { return ResponseEntity.ok(repository.save(value)); }
-    @GetMapping
-    @Operation(summary = "List meeting records")
-    public ResponseEntity<Page<Meeting>> list(@PageableDefault(size = 20) Pageable pageable) { return ResponseEntity.ok(repository.findAll(pageable)); }
-    @GetMapping("/{id}")
-    @Operation(summary = "Get meeting by id")
-    public ResponseEntity<Meeting> get(@PathVariable Long id) { return repository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build()); }
-    @PutMapping("/{id}")
-    @Operation(summary = "Update meeting")
-    public ResponseEntity<Meeting> update(@PathVariable Long id, @Valid @RequestBody Meeting value) { return repository.findById(id).map(old -> { value.setTitle(value.getTitle()); return ResponseEntity.ok(repository.save(value)); }).orElse(ResponseEntity.notFound().build()); }
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete meeting")
-    public ResponseEntity<Void> delete(@PathVariable Long id) { if (!repository.existsById(id)) return ResponseEntity.notFound().build(); repository.deleteById(id); return ResponseEntity.noContent().build(); }
+  private final MeetingRepository repository;
+
+  public MeetingController(MeetingRepository repository) {
+    this.repository = repository;
+  }
+
+  @PostMapping
+  @Operation(summary = "Create meeting")
+  public ResponseEntity<Meeting> create(@Valid @RequestBody Meeting value) {
+    return ResponseEntity.ok(repository.save(value));
+  }
+
+  @GetMapping
+  @Operation(summary = "List meeting records")
+  public ResponseEntity<Page<Meeting>> list(@PageableDefault(size = 20) Pageable pageable) {
+    return ResponseEntity.ok(repository.findAll(pageable));
+  }
+
+  @GetMapping("/{id}")
+  @Operation(summary = "Get meeting by id")
+  public ResponseEntity<Meeting> get(@PathVariable Long id) {
+    return repository
+        .findById(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PutMapping("/{id}")
+  @Operation(summary = "Update meeting")
+  public ResponseEntity<Meeting> update(@PathVariable Long id, @Valid @RequestBody Meeting value) {
+    return repository
+        .findById(id)
+        .map(
+            old -> {
+              value.setTitle(value.getTitle());
+              return ResponseEntity.ok(repository.save(value));
+            })
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @DeleteMapping("/{id}")
+  @Operation(summary = "Delete meeting")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    if (!repository.existsById(id)) return ResponseEntity.notFound().build();
+    repository.deleteById(id);
+    return ResponseEntity.noContent().build();
+  }
 }

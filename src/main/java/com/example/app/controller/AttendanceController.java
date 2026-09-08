@@ -22,21 +22,52 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/attendances")
 @Tag(name = "Attendance")
 public class AttendanceController {
-    private final AttendanceRepository repository;
-    public AttendanceController(AttendanceRepository repository) { this.repository = repository; }
-    @PostMapping
-    @Operation(summary = "Create attendance")
-    public ResponseEntity<Attendance> create(@Valid @RequestBody Attendance value) { return ResponseEntity.ok(repository.save(value)); }
-    @GetMapping
-    @Operation(summary = "List attendance records")
-    public ResponseEntity<Page<Attendance>> list(@PageableDefault(size = 20) Pageable pageable) { return ResponseEntity.ok(repository.findAll(pageable)); }
-    @GetMapping("/{id}")
-    @Operation(summary = "Get attendance by id")
-    public ResponseEntity<Attendance> get(@PathVariable Long id) { return repository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build()); }
-    @PutMapping("/{id}")
-    @Operation(summary = "Update attendance")
-    public ResponseEntity<Attendance> update(@PathVariable Long id, @Valid @RequestBody Attendance value) { return repository.findById(id).map(old -> { value.setDate(value.getDate()); return ResponseEntity.ok(repository.save(value)); }).orElse(ResponseEntity.notFound().build()); }
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete attendance")
-    public ResponseEntity<Void> delete(@PathVariable Long id) { if (!repository.existsById(id)) return ResponseEntity.notFound().build(); repository.deleteById(id); return ResponseEntity.noContent().build(); }
+  private final AttendanceRepository repository;
+
+  public AttendanceController(AttendanceRepository repository) {
+    this.repository = repository;
+  }
+
+  @PostMapping
+  @Operation(summary = "Create attendance")
+  public ResponseEntity<Attendance> create(@Valid @RequestBody Attendance value) {
+    return ResponseEntity.ok(repository.save(value));
+  }
+
+  @GetMapping
+  @Operation(summary = "List attendance records")
+  public ResponseEntity<Page<Attendance>> list(@PageableDefault(size = 20) Pageable pageable) {
+    return ResponseEntity.ok(repository.findAll(pageable));
+  }
+
+  @GetMapping("/{id}")
+  @Operation(summary = "Get attendance by id")
+  public ResponseEntity<Attendance> get(@PathVariable Long id) {
+    return repository
+        .findById(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PutMapping("/{id}")
+  @Operation(summary = "Update attendance")
+  public ResponseEntity<Attendance> update(
+      @PathVariable Long id, @Valid @RequestBody Attendance value) {
+    return repository
+        .findById(id)
+        .map(
+            old -> {
+              value.setDate(value.getDate());
+              return ResponseEntity.ok(repository.save(value));
+            })
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @DeleteMapping("/{id}")
+  @Operation(summary = "Delete attendance")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    if (!repository.existsById(id)) return ResponseEntity.notFound().build();
+    repository.deleteById(id);
+    return ResponseEntity.noContent().build();
+  }
 }

@@ -22,21 +22,51 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/tasks")
 @Tag(name = "Task")
 public class TaskController {
-    private final TaskRepository repository;
-    public TaskController(TaskRepository repository) { this.repository = repository; }
-    @PostMapping
-    @Operation(summary = "Create task")
-    public ResponseEntity<Task> create(@Valid @RequestBody Task value) { return ResponseEntity.ok(repository.save(value)); }
-    @GetMapping
-    @Operation(summary = "List task records")
-    public ResponseEntity<Page<Task>> list(@PageableDefault(size = 20) Pageable pageable) { return ResponseEntity.ok(repository.findAll(pageable)); }
-    @GetMapping("/{id}")
-    @Operation(summary = "Get task by id")
-    public ResponseEntity<Task> get(@PathVariable Long id) { return repository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build()); }
-    @PutMapping("/{id}")
-    @Operation(summary = "Update task")
-    public ResponseEntity<Task> update(@PathVariable Long id, @Valid @RequestBody Task value) { return repository.findById(id).map(old -> { value.setTitle(value.getTitle()); return ResponseEntity.ok(repository.save(value)); }).orElse(ResponseEntity.notFound().build()); }
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete task")
-    public ResponseEntity<Void> delete(@PathVariable Long id) { if (!repository.existsById(id)) return ResponseEntity.notFound().build(); repository.deleteById(id); return ResponseEntity.noContent().build(); }
+  private final TaskRepository repository;
+
+  public TaskController(TaskRepository repository) {
+    this.repository = repository;
+  }
+
+  @PostMapping
+  @Operation(summary = "Create task")
+  public ResponseEntity<Task> create(@Valid @RequestBody Task value) {
+    return ResponseEntity.ok(repository.save(value));
+  }
+
+  @GetMapping
+  @Operation(summary = "List task records")
+  public ResponseEntity<Page<Task>> list(@PageableDefault(size = 20) Pageable pageable) {
+    return ResponseEntity.ok(repository.findAll(pageable));
+  }
+
+  @GetMapping("/{id}")
+  @Operation(summary = "Get task by id")
+  public ResponseEntity<Task> get(@PathVariable Long id) {
+    return repository
+        .findById(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PutMapping("/{id}")
+  @Operation(summary = "Update task")
+  public ResponseEntity<Task> update(@PathVariable Long id, @Valid @RequestBody Task value) {
+    return repository
+        .findById(id)
+        .map(
+            old -> {
+              value.setTitle(value.getTitle());
+              return ResponseEntity.ok(repository.save(value));
+            })
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @DeleteMapping("/{id}")
+  @Operation(summary = "Delete task")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    if (!repository.existsById(id)) return ResponseEntity.notFound().build();
+    repository.deleteById(id);
+    return ResponseEntity.noContent().build();
+  }
 }

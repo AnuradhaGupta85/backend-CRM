@@ -22,21 +22,52 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/customer-notes")
 @Tag(name = "CustomerNote")
 public class CustomerNoteController {
-    private final CustomerNoteRepository repository;
-    public CustomerNoteController(CustomerNoteRepository repository) { this.repository = repository; }
-    @PostMapping
-    @Operation(summary = "Create customernote")
-    public ResponseEntity<CustomerNote> create(@Valid @RequestBody CustomerNote value) { return ResponseEntity.ok(repository.save(value)); }
-    @GetMapping
-    @Operation(summary = "List customernote records")
-    public ResponseEntity<Page<CustomerNote>> list(@PageableDefault(size = 20) Pageable pageable) { return ResponseEntity.ok(repository.findAll(pageable)); }
-    @GetMapping("/{id}")
-    @Operation(summary = "Get customernote by id")
-    public ResponseEntity<CustomerNote> get(@PathVariable Long id) { return repository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build()); }
-    @PutMapping("/{id}")
-    @Operation(summary = "Update customernote")
-    public ResponseEntity<CustomerNote> update(@PathVariable Long id, @Valid @RequestBody CustomerNote value) { return repository.findById(id).map(old -> { value.setNote(value.getNote()); return ResponseEntity.ok(repository.save(value)); }).orElse(ResponseEntity.notFound().build()); }
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete customernote")
-    public ResponseEntity<Void> delete(@PathVariable Long id) { if (!repository.existsById(id)) return ResponseEntity.notFound().build(); repository.deleteById(id); return ResponseEntity.noContent().build(); }
+  private final CustomerNoteRepository repository;
+
+  public CustomerNoteController(CustomerNoteRepository repository) {
+    this.repository = repository;
+  }
+
+  @PostMapping
+  @Operation(summary = "Create customernote")
+  public ResponseEntity<CustomerNote> create(@Valid @RequestBody CustomerNote value) {
+    return ResponseEntity.ok(repository.save(value));
+  }
+
+  @GetMapping
+  @Operation(summary = "List customernote records")
+  public ResponseEntity<Page<CustomerNote>> list(@PageableDefault(size = 20) Pageable pageable) {
+    return ResponseEntity.ok(repository.findAll(pageable));
+  }
+
+  @GetMapping("/{id}")
+  @Operation(summary = "Get customernote by id")
+  public ResponseEntity<CustomerNote> get(@PathVariable Long id) {
+    return repository
+        .findById(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PutMapping("/{id}")
+  @Operation(summary = "Update customernote")
+  public ResponseEntity<CustomerNote> update(
+      @PathVariable Long id, @Valid @RequestBody CustomerNote value) {
+    return repository
+        .findById(id)
+        .map(
+            old -> {
+              value.setNote(value.getNote());
+              return ResponseEntity.ok(repository.save(value));
+            })
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @DeleteMapping("/{id}")
+  @Operation(summary = "Delete customernote")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    if (!repository.existsById(id)) return ResponseEntity.notFound().build();
+    repository.deleteById(id);
+    return ResponseEntity.noContent().build();
+  }
 }

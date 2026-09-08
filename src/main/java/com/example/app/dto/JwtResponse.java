@@ -1,4 +1,3 @@
 package com.example.app.dto;
 
-public record JwtResponse(String token, String tokenType) {
-}
+public record JwtResponse(String token, String tokenType) {}

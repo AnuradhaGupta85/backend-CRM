@@ -22,21 +22,51 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/leaves")
 @Tag(name = "Leave")
 public class LeaveController {
-    private final LeaveRepository repository;
-    public LeaveController(LeaveRepository repository) { this.repository = repository; }
-    @PostMapping
-    @Operation(summary = "Create leave")
-    public ResponseEntity<Leave> create(@Valid @RequestBody Leave value) { return ResponseEntity.ok(repository.save(value)); }
-    @GetMapping
-    @Operation(summary = "List leave records")
-    public ResponseEntity<Page<Leave>> list(@PageableDefault(size = 20) Pageable pageable) { return ResponseEntity.ok(repository.findAll(pageable)); }
-    @GetMapping("/{id}")
-    @Operation(summary = "Get leave by id")
-    public ResponseEntity<Leave> get(@PathVariable Long id) { return repository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build()); }
-    @PutMapping("/{id}")
-    @Operation(summary = "Update leave")
-    public ResponseEntity<Leave> update(@PathVariable Long id, @Valid @RequestBody Leave value) { return repository.findById(id).map(old -> { value.setReason(value.getReason()); return ResponseEntity.ok(repository.save(value)); }).orElse(ResponseEntity.notFound().build()); }
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete leave")
-    public ResponseEntity<Void> delete(@PathVariable Long id) { if (!repository.existsById(id)) return ResponseEntity.notFound().build(); repository.deleteById(id); return ResponseEntity.noContent().build(); }
+  private final LeaveRepository repository;
+
+  public LeaveController(LeaveRepository repository) {
+    this.repository = repository;
+  }
+
+  @PostMapping
+  @Operation(summary = "Create leave")
+  public ResponseEntity<Leave> create(@Valid @RequestBody Leave value) {
+    return ResponseEntity.ok(repository.save(value));
+  }
+
+  @GetMapping
+  @Operation(summary = "List leave records")
+  public ResponseEntity<Page<Leave>> list(@PageableDefault(size = 20) Pageable pageable) {
+    return ResponseEntity.ok(repository.findAll(pageable));
+  }
+
+  @GetMapping("/{id}")
+  @Operation(summary = "Get leave by id")
+  public ResponseEntity<Leave> get(@PathVariable Long id) {
+    return repository
+        .findById(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PutMapping("/{id}")
+  @Operation(summary = "Update leave")
+  public ResponseEntity<Leave> update(@PathVariable Long id, @Valid @RequestBody Leave value) {
+    return repository
+        .findById(id)
+        .map(
+            old -> {
+              value.setReason(value.getReason());
+              return ResponseEntity.ok(repository.save(value));
+            })
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @DeleteMapping("/{id}")
+  @Operation(summary = "Delete leave")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    if (!repository.existsById(id)) return ResponseEntity.notFound().build();
+    repository.deleteById(id);
+    return ResponseEntity.noContent().build();
+  }
 }

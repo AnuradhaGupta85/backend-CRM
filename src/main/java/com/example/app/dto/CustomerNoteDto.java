@@ -2,5 +2,4 @@ package com.example.app.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record CustomerNoteDto(@NotBlank String note) {
-}
+public record CustomerNoteDto(@NotBlank String note) {}

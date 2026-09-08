@@ -22,21 +22,51 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/leads")
 @Tag(name = "Lead")
 public class LeadController {
-    private final LeadRepository repository;
-    public LeadController(LeadRepository repository) { this.repository = repository; }
-    @PostMapping
-    @Operation(summary = "Create lead")
-    public ResponseEntity<Lead> create(@Valid @RequestBody Lead value) { return ResponseEntity.ok(repository.save(value)); }
-    @GetMapping
-    @Operation(summary = "List lead records")
-    public ResponseEntity<Page<Lead>> list(@PageableDefault(size = 20) Pageable pageable) { return ResponseEntity.ok(repository.findAll(pageable)); }
-    @GetMapping("/{id}")
-    @Operation(summary = "Get lead by id")
-    public ResponseEntity<Lead> get(@PathVariable Long id) { return repository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build()); }
-    @PutMapping("/{id}")
-    @Operation(summary = "Update lead")
-    public ResponseEntity<Lead> update(@PathVariable Long id, @Valid @RequestBody Lead value) { return repository.findById(id).map(old -> { old.setName(value.getName()); return ResponseEntity.ok(repository.save(old)); }).orElse(ResponseEntity.notFound().build()); }
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete lead")
-    public ResponseEntity<Void> delete(@PathVariable Long id) { if (!repository.existsById(id)) return ResponseEntity.notFound().build(); repository.deleteById(id); return ResponseEntity.noContent().build(); }
+  private final LeadRepository repository;
+
+  public LeadController(LeadRepository repository) {
+    this.repository = repository;
+  }
+
+  @PostMapping
+  @Operation(summary = "Create lead")
+  public ResponseEntity<Lead> create(@Valid @RequestBody Lead value) {
+    return ResponseEntity.ok(repository.save(value));
+  }
+
+  @GetMapping
+  @Operation(summary = "List lead records")
+  public ResponseEntity<Page<Lead>> list(@PageableDefault(size = 20) Pageable pageable) {
+    return ResponseEntity.ok(repository.findAll(pageable));
+  }
+
+  @GetMapping("/{id}")
+  @Operation(summary = "Get lead by id")
+  public ResponseEntity<Lead> get(@PathVariable Long id) {
+    return repository
+        .findById(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PutMapping("/{id}")
+  @Operation(summary = "Update lead")
+  public ResponseEntity<Lead> update(@PathVariable Long id, @Valid @RequestBody Lead value) {
+    return repository
+        .findById(id)
+        .map(
+            old -> {
+              old.setName(value.getName());
+              return ResponseEntity.ok(repository.save(old));
+            })
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @DeleteMapping("/{id}")
+  @Operation(summary = "Delete lead")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    if (!repository.existsById(id)) return ResponseEntity.notFound().build();
+    repository.deleteById(id);
+    return ResponseEntity.noContent().build();
+  }
 }

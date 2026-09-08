@@ -22,21 +22,52 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/departments")
 @Tag(name = "Department")
 public class DepartmentController {
-    private final DepartmentRepository repository;
-    public DepartmentController(DepartmentRepository repository) { this.repository = repository; }
-    @PostMapping
-    @Operation(summary = "Create department")
-    public ResponseEntity<Department> create(@Valid @RequestBody Department value) { return ResponseEntity.ok(repository.save(value)); }
-    @GetMapping
-    @Operation(summary = "List department records")
-    public ResponseEntity<Page<Department>> list(@PageableDefault(size = 20) Pageable pageable) { return ResponseEntity.ok(repository.findAll(pageable)); }
-    @GetMapping("/{id}")
-    @Operation(summary = "Get department by id")
-    public ResponseEntity<Department> get(@PathVariable Long id) { return repository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build()); }
-    @PutMapping("/{id}")
-    @Operation(summary = "Update department")
-    public ResponseEntity<Department> update(@PathVariable Long id, @Valid @RequestBody Department value) { return repository.findById(id).map(old -> { old.setName(value.getName()); return ResponseEntity.ok(repository.save(old)); }).orElse(ResponseEntity.notFound().build()); }
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete department")
-    public ResponseEntity<Void> delete(@PathVariable Long id) { if (!repository.existsById(id)) return ResponseEntity.notFound().build(); repository.deleteById(id); return ResponseEntity.noContent().build(); }
+  private final DepartmentRepository repository;
+
+  public DepartmentController(DepartmentRepository repository) {
+    this.repository = repository;
+  }
+
+  @PostMapping
+  @Operation(summary = "Create department")
+  public ResponseEntity<Department> create(@Valid @RequestBody Department value) {
+    return ResponseEntity.ok(repository.save(value));
+  }
+
+  @GetMapping
+  @Operation(summary = "List department records")
+  public ResponseEntity<Page<Department>> list(@PageableDefault(size = 20) Pageable pageable) {
+    return ResponseEntity.ok(repository.findAll(pageable));
+  }
+
+  @GetMapping("/{id}")
+  @Operation(summary = "Get department by id")
+  public ResponseEntity<Department> get(@PathVariable Long id) {
+    return repository
+        .findById(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PutMapping("/{id}")
+  @Operation(summary = "Update department")
+  public ResponseEntity<Department> update(
+      @PathVariable Long id, @Valid @RequestBody Department value) {
+    return repository
+        .findById(id)
+        .map(
+            old -> {
+              old.setName(value.getName());
+              return ResponseEntity.ok(repository.save(old));
+            })
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @DeleteMapping("/{id}")
+  @Operation(summary = "Delete department")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    if (!repository.existsById(id)) return ResponseEntity.notFound().build();
+    repository.deleteById(id);
+    return ResponseEntity.noContent().build();
+  }
 }
